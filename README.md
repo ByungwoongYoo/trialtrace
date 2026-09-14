@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/ByungwoongYoo/trialtrace/actions/workflows/ci.yml/badge.svg)](https://github.com/ByungwoongYoo/trialtrace/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/ByungwoongYoo/trialtrace/actions/workflows/codeql.yml/badge.svg)](https://github.com/ByungwoongYoo/trialtrace/actions/workflows/codeql.yml)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/14628/badge)](https://www.bestpractices.dev/projects/14628)
 [![License: MIT](https://img.shields.io/badge/code%20license-MIT-0c6d66.svg)](LICENSE)
 [![Data license: CC BY 4.0](https://img.shields.io/badge/derived%20data-CC%20BY%204.0-df6b4f.svg)](LICENSE-DATA)
 
