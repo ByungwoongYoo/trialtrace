@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from trialtrace import __version__
+
 
 def test_home_serves_search_interface(client) -> None:
     response = client.get("/")
@@ -13,7 +15,7 @@ def test_home_serves_search_interface(client) -> None:
 def test_health_reports_loaded_trial_count(client) -> None:
     response = client.get("/healthz")
     assert response.status_code == 200
-    assert response.json() == {"status": "ok", "version": "0.1.0", "trials": 400}
+    assert response.json() == {"status": "ok", "version": __version__, "trials": 400}
 
 
 def test_known_trial_summary(client) -> None:
