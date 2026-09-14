@@ -4,6 +4,10 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Parsed content-security-policy directives in the regression test so CodeQL does not mistake an assertion for URL sanitization.
+
 ## [0.1.2] - 2026-09-14
 
 ### Security

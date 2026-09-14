@@ -170,5 +170,9 @@ def test_interactive_docs_receive_their_required_csp_sources(client) -> None:
     response = client.get("/docs")
     assert response.status_code == 200
     policy = response.headers["content-security-policy"]
-    assert "https://cdn.jsdelivr.net" in policy
-    assert "script-src 'self' 'unsafe-inline'" in policy
+    directives: dict[str, set[str]] = {}
+    for directive in policy.split(";"):
+        parts = directive.split()
+        if parts:
+            directives[parts[0]] = set(parts[1:])
+    assert directives["script-src"] == {"'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"}
