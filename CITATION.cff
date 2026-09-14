@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use TrialTrace, please cite the software and its archived dataset."
+title: "TrialTrace"
+type: software
+version: 0.1.0
+license: MIT
+authors:
+  - family-names: Yoo
+    given-names: Byungwoong
+    orcid: "https://orcid.org/0009-0002-1797-3100"
+repository-code: "https://github.com/ByungwoongYoo/trialtrace"
+url: "https://github.com/ByungwoongYoo/trialtrace"
+abstract: >-
+  TrialTrace is a source-linked explorer for a frozen, derived
+  ClinicalTrials.gov record-history corpus covering 400 trials and 5,629
+  reconstructed transitions.
+references:
+  - type: dataset
+    title: >-
+      State–clock–anchor framework for registry-based clinical epidemiology:
+      reproducibility materials for construct-validity diagnostics using
+      ClinicalTrials.gov histories
+    doi: "10.5281/zenodo.22162352"
+    authors:
+      - family-names: Yoo
+        given-names: Byungwoong
