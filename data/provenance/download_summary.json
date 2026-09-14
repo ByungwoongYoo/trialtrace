@@ -1,0 +1,11 @@
+{
+  "complete": true,
+  "generated_at_utc": "2026-07-30T02:57:47Z",
+  "history_index_failures": 0,
+  "history_indexes_available": 400,
+  "interface_note": "Official clinicaltrials.gov record-history JSON interface; not part of the documented Data API v2 contract.",
+  "selected_nct_ids": 400,
+  "version_payload_failures": 0,
+  "version_payloads_available": 6029,
+  "version_payloads_expected": 6029
+}

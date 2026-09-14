@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Explore source-linked changes in a frozen 400-trial ClinicalTrials.gov history corpus." />
+    <title>TrialTrace</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230c6d66'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-family='sans-serif' font-size='24' font-weight='700' fill='white'%3ETT%3C/text%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <header class="masthead">
+      <div class="masthead__inner">
+        <a class="brand" href="/" aria-label="TrialTrace home">
+          <span class="brand__mark" aria-hidden="true">TT</span>
+          <span>TrialTrace</span>
+        </a>
+        <a class="api-link" href="/docs">API docs</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <p class="eyebrow">Clinical trial record history</p>
+        <h1>See what changed, when it changed, and where to verify it.</h1>
+        <p class="intro">
+          Search a frozen corpus of 400 ClinicalTrials.gov studies and 5,629 derived history transitions.
+          Every result links back to the official record-history page.
+        </p>
+
+        <form id="search-form" class="search" novalidate>
+          <label for="nct-id">ClinicalTrials.gov identifier</label>
+          <div class="search__row">
+            <input id="nct-id" name="nct-id" value="NCT04153409" inputmode="text" autocomplete="off" spellcheck="false" aria-describedby="search-hint" />
+            <button type="submit">Search history</button>
+          </div>
+          <p id="search-hint" class="hint">Try NCT04153409 or NCT03845075.</p>
+        </form>
+      </section>
+
+      <section id="status" class="status" aria-live="polite"></section>
+
+      <section id="results" class="results" hidden>
+        <div class="summary-card">
+          <div>
+            <p class="eyebrow">Trial summary</p>
+            <h2 id="trial-title"></h2>
+          </div>
+          <a id="source-link" class="source-button" target="_blank" rel="noopener noreferrer">Open official history</a>
+          <dl id="summary-grid" class="summary-grid"></dl>
+        </div>
+
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Derived timeline</p>
+            <h2>Version-by-version changes</h2>
+          </div>
+          <label class="filter"><input id="changed-only" type="checkbox" /> Show changed versions only</label>
+        </div>
+        <div id="timeline" class="timeline"></div>
+      </section>
+
+      <section class="scope-note">
+        <h2>What this release contains</h2>
+        <p>
+          TrialTrace publishes author-created derived tables under CC BY 4.0. It does not redistribute the raw
+          history payload archive or relicense ClinicalTrials.gov source records. The corpus reflects recorded
+          retrieval timestamps, so use the linked official page for current information.
+        </p>
+        <p class="source-credit">
+          Source: ClinicalTrials.gov, U.S. National Library of Medicine. Frozen retrieval window: 2026-07-30 UTC.
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <span>TrialTrace v0.1.0</span>
+      <a href="/api/provenance">Corpus provenance</a>
+    </footer>
+    <script src="/static/app.js" defer></script>
+  </body>
+</html>

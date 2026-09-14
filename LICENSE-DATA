@@ -1,0 +1,29 @@
+TrialTrace derived data license
+
+Copyright (c) 2026 Byungwoong Yoo
+
+The author-created derived tables, documentation, and original figures in this
+repository are licensed under the Creative Commons Attribution 4.0
+International License (CC BY 4.0):
+
+https://creativecommons.org/licenses/by/4.0/
+https://creativecommons.org/licenses/by/4.0/legalcode
+
+Attribution should identify "Byungwoong Yoo, TrialTrace", link to the source
+repository when available, link to the CC BY 4.0 license, and indicate whether
+changes were made.
+
+This license grant covers:
+
+- data/raw_event_ledger.csv
+- data/raw_trial_anchors.csv
+- data/provenance/retrieval_manifest_reduced.csv
+- data/provenance/version_counts.csv
+- data/provenance/download_summary.json
+- documentation written for this repository
+
+It does not cover or relicense raw ClinicalTrials.gov records, raw record-history
+payloads, ClinicalTrials.gov branding, or other third-party material. Those raw
+records are not distributed in this repository. See THIRD_PARTY_DATA.md.
+
+The source code is separately licensed under the MIT License in LICENSE.
