@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools==80.9.0"]
+requires = ["setuptools==84.0.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "trialtrace"
-version = "0.1.0"
+version = "0.1.1"
 description = "A source-linked explorer for a frozen, derived ClinicalTrials.gov history corpus"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -14,8 +14,8 @@ authors = [
 ]
 dependencies = [
   "fastapi==0.141.1",
-  "starlette==1.3.1",
-  "uvicorn[standard]==0.35.0",
+  "starlette==1.6.0",
+  "uvicorn[standard]==0.52.4",
 ]
 
 [project.optional-dependencies]
@@ -24,9 +24,9 @@ test = [
   "pytest==9.1.1",
 ]
 dev = [
-  "bandit==1.8.6",
-  "pip-audit==2.9.0",
-  "ruff==0.13.2",
+  "bandit==1.9.4",
+  "pip-audit==2.10.1",
+  "ruff==0.16.7",
 ]
 
 [project.urls]
