@@ -9,13 +9,14 @@ import os
 import sqlite3
 import tempfile
 from collections import Counter
-from collections.abc import Iterable
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
-DATA_DIR = REPOSITORY_ROOT / "data"
-DEFAULT_DB_PATH = REPOSITORY_ROOT / "trialtrace.db"
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+
+DATA_DIR = Path(__file__).with_name("data")
+DEFAULT_DB_PATH = Path.cwd() / "trialtrace.db"
 
 EXPECTED_COUNTS = {
     "trials": 400,
@@ -434,7 +435,7 @@ def build_database(
                 raise CorpusValidationError(f"SQLite integrity check failed: {check}")
         finally:
             connection.close()
-        os.replace(temp_path, db_path)
+        temp_path.replace(db_path)
     except Exception:
         temp_path.unlink(missing_ok=True)
         raise

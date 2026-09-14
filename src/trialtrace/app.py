@@ -7,14 +7,18 @@ import os
 import re
 from contextlib import asynccontextmanager, closing
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Annotated, Any
 
 from fastapi import FastAPI, HTTPException, Query, Request
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, Response
 from fastapi.staticfiles import StaticFiles
 
 from . import __version__
 from .db import DATA_DIR, DEFAULT_DB_PATH, build_database, connect
+
+if TYPE_CHECKING:
+    import sqlite3
+    from collections.abc import AsyncIterator, Awaitable, Callable
 
 NCT_PATTERN = re.compile(r"^NCT\d{8}$")
 STATIC_DIR = Path(__file__).with_name("static")
@@ -40,7 +44,7 @@ def _not_found(nct_id: str) -> HTTPException:
     )
 
 
-def _transition(row: Any) -> dict[str, Any]:
+def _transition(row: sqlite3.Row) -> dict[str, Any]:
     return {
         "nct_id": row["nct_id"],
         "version": row["version"],
@@ -69,7 +73,7 @@ def create_app(db_path: Path | str | None = None, data_dir: Path | str = DATA_DI
     resolved_data = Path(data_dir)
 
     @asynccontextmanager
-    async def lifespan(_: FastAPI):
+    async def lifespan(_: FastAPI) -> AsyncIterator[None]:
         if not resolved_db.is_file():
             build_database(resolved_db, resolved_data)
         yield
@@ -83,6 +87,34 @@ def create_app(db_path: Path | str | None = None, data_dir: Path | str = DATA_DI
     )
     application.state.db_path = resolved_db
     application.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+
+    @application.middleware("http")
+    async def add_security_headers(
+        request: Request,
+        call_next: Callable[[Request], Awaitable[Response]],
+    ) -> Response:
+        response = await call_next(request)
+        if request.url.path in {"/docs", "/redoc"}:
+            content_security_policy = (
+                "default-src 'self'; "
+                "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
+                "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
+                "img-src 'self' data: https://fastapi.tiangolo.com; "
+                "connect-src 'self'; object-src 'none'; base-uri 'none'; "
+                "frame-ancestors 'none'; form-action 'self'"
+            )
+        else:
+            content_security_policy = (
+                "default-src 'self'; script-src 'self'; style-src 'self'; "
+                "img-src 'self' data:; connect-src 'self'; object-src 'none'; "
+                "base-uri 'none'; frame-ancestors 'none'; form-action 'self'"
+            )
+        response.headers["Content-Security-Policy"] = content_security_policy
+        response.headers["Permissions-Policy"] = "camera=(), geolocation=(), microphone=()"
+        response.headers["Referrer-Policy"] = "no-referrer"
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        return response
 
     @application.get("/", include_in_schema=False)
     def home() -> FileResponse:
@@ -127,7 +159,7 @@ def create_app(db_path: Path | str | None = None, data_dir: Path | str = DATA_DI
     def get_timeline(
         nct_id: str,
         request: Request,
-        version: int | None = Query(default=None, ge=0),
+        version: Annotated[int | None, Query(ge=0)] = None,
     ) -> dict[str, Any]:
         normalized = normalize_nct_id(nct_id)
         with closing(connect(request.app.state.db_path)) as database:
@@ -157,7 +189,7 @@ def create_app(db_path: Path | str | None = None, data_dir: Path | str = DATA_DI
     def get_changes(
         nct_id: str,
         request: Request,
-        version: int | None = Query(default=None, ge=0),
+        version: Annotated[int | None, Query(ge=0)] = None,
     ) -> dict[str, Any]:
         normalized = normalize_nct_id(nct_id)
         with closing(connect(request.app.state.db_path)) as database:

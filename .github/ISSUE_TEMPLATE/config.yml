@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Private vulnerability report
+    url: https://github.com/ByungwoongYoo/trialtrace/security/advisories/new
+    about: Report a possible security vulnerability privately.
+  - name: Usage and API documentation
+    url: https://github.com/ByungwoongYoo/trialtrace/tree/main/docs
+    about: Read setup, API, testing, architecture, and security documentation.

@@ -10,6 +10,7 @@ TrialTrace is a read-only explorer for changes reconstructed from a frozen Clini
 The bundled release covers:
 
 - 400 trials;
+- 400 retrieved history indexes recorded in the reduced provenance manifest;
 - 6,029 retrieved history versions recorded in the reduced provenance manifest;
 - 5,629 reconstructed transitions;
 - 5,411 publicly posted transitions; and
@@ -17,11 +18,22 @@ The bundled release covers:
 
 These are corpus counts, not claims about all registered trials or current ClinicalTrials.gov records.
 
+## Documentation
+
+- [Use TrialTrace](docs/USAGE.md)
+- [API reference](docs/API.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Testing and change policy](docs/TESTING.md)
+- [Security design](docs/SECURITY_DESIGN.md)
+- [Release process](docs/RELEASE_PROCESS.md)
+
 ## Run locally
 
 TrialTrace requires Python 3.11 or later.
 
 ```bash
+git clone https://github.com/ByungwoongYoo/trialtrace.git
+cd trialtrace
 python -m venv .venv
 # Windows: .venv\Scripts\activate
 # macOS/Linux: source .venv/bin/activate
@@ -48,7 +60,7 @@ Identifiers are case-insensitive on input and must match `NCT` followed by eight
 
 ## Data and provenance
 
-The public data files are in [`data/`](data/README.md):
+The public data files are bundled in [`src/trialtrace/data/`](src/trialtrace/data/README.md):
 
 - `raw_event_ledger.csv`: author-created transition-level derived table;
 - `raw_trial_anchors.csv`: author-created trial-level anchor table;

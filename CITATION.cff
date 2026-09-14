@@ -2,7 +2,8 @@ cff-version: 1.2.0
 message: "If you use TrialTrace, please cite the software and its archived dataset."
 title: "TrialTrace"
 type: software
-version: 0.1.1
+version: 0.1.2
+date-released: 2026-09-14
 license: MIT
 authors:
   - family-names: Yoo

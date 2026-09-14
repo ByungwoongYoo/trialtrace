@@ -1,6 +1,11 @@
 from __future__ import annotations
 
+import pytest
+from fastapi.testclient import TestClient
+
 from trialtrace import __version__
+from trialtrace.app import create_app
+from trialtrace.db import DATA_DIR
 
 
 def test_home_serves_search_interface(client) -> None:
@@ -8,6 +13,7 @@ def test_home_serves_search_interface(client) -> None:
     assert response.status_code == 200
     assert "Search history" in response.text
     assert "TrialTrace" in response.text
+    assert f"TrialTrace v{__version__}" in response.text
     assert "U.S. National Library of Medicine" in response.text
     assert "2026-07-30 UTC" in response.text
 
@@ -16,6 +22,14 @@ def test_health_reports_loaded_trial_count(client) -> None:
     response = client.get("/healthz")
     assert response.status_code == 200
     assert response.json() == {"status": "ok", "version": __version__, "trials": 400}
+
+
+def test_startup_builds_missing_database(tmp_path) -> None:
+    database_path = tmp_path / "startup" / "trialtrace.db"
+    with TestClient(create_app(database_path, DATA_DIR)) as startup_client:
+        response = startup_client.get("/healthz")
+    assert response.json() == {"status": "ok", "version": __version__, "trials": 400}
+    assert database_path.is_file()
 
 
 def test_known_trial_summary(client) -> None:
@@ -37,6 +51,23 @@ def test_invalid_identifier_returns_structured_422(client) -> None:
     response = client.get("/api/trials/NCT123")
     assert response.status_code == 422
     assert response.json()["detail"]["code"] == "invalid_nct_id"
+
+
+@pytest.mark.parametrize(
+    "hostile_identifier",
+    [
+        "NCT04153409' OR 1=1--",
+        "NCT04153409; DROP TABLE trials;--",
+        "<script>alert(1)</script>",
+        "../../etc/passwd",
+    ],
+)
+def test_hostile_identifiers_fail_closed_without_changing_the_corpus(client, hostile_identifier: str) -> None:
+    rejected = client.get(f"/api/trials/{hostile_identifier}")
+    assert rejected.status_code in {404, 422}
+
+    health = client.get("/healthz")
+    assert health.json()["trials"] == 400
 
 
 def test_valid_but_absent_identifier_returns_404(client) -> None:
@@ -68,6 +99,12 @@ def test_missing_timeline_version_returns_structured_404(client) -> None:
     assert response.json()["detail"]["code"] == "version_not_found"
 
 
+def test_timeline_for_absent_trial_returns_structured_404(client) -> None:
+    response = client.get("/api/trials/NCT00000000/timeline")
+    assert response.status_code == 404
+    assert response.json()["detail"]["code"] == "trial_not_found"
+
+
 def test_changes_endpoint_exposes_flags_values_and_signatures(client) -> None:
     response = client.get("/api/trials/NCT04153409/changes?version=2")
     assert response.status_code == 200
@@ -76,6 +113,20 @@ def test_changes_endpoint_exposes_flags_values_and_signatures(client) -> None:
     fields = {change["field"] for change in payload["items"][0]["changes"]}
     assert "primary_measure_signature" in fields
     assert "primary_outcome_signature" in fields
+
+
+def test_unfiltered_changes_returns_ordered_items(client) -> None:
+    response = client.get("/api/trials/NCT04153409/changes")
+    assert response.status_code == 200
+    items = response.json()["items"]
+    assert items
+    assert [item["version"] for item in items] == sorted(item["version"] for item in items)
+
+
+def test_changes_for_absent_trial_returns_structured_404(client) -> None:
+    response = client.get("/api/trials/NCT00000000/changes")
+    assert response.status_code == 404
+    assert response.json()["detail"]["code"] == "trial_not_found"
 
 
 def test_version_without_tracked_changes_returns_empty_result(client) -> None:
@@ -104,3 +155,20 @@ def test_openapi_lists_public_endpoints(client) -> None:
     assert "/api/trials/{nct_id}/timeline" in paths
     assert "/api/trials/{nct_id}/changes" in paths
     assert "/api/provenance" in paths
+
+
+def test_responses_include_browser_security_headers(client) -> None:
+    response = client.get("/")
+    assert response.headers["x-content-type-options"] == "nosniff"
+    assert response.headers["x-frame-options"] == "DENY"
+    assert response.headers["referrer-policy"] == "no-referrer"
+    assert "object-src 'none'" in response.headers["content-security-policy"]
+    assert "'unsafe-inline'" not in response.headers["content-security-policy"]
+
+
+def test_interactive_docs_receive_their_required_csp_sources(client) -> None:
+    response = client.get("/docs")
+    assert response.status_code == 200
+    policy = response.headers["content-security-policy"]
+    assert "https://cdn.jsdelivr.net" in policy
+    assert "script-src 'self' 'unsafe-inline'" in policy

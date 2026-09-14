@@ -3,10 +3,12 @@ __pycache__/
 *.so
 .Python
 .venv/
+.wheel-venv/
 venv/
 .pytest_cache/
 .ruff_cache/
 .coverage
+coverage.json
 htmlcov/
 build/
 dist/

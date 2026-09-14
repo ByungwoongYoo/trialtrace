@@ -15,11 +15,11 @@ changes were made.
 
 This license grant covers:
 
-- data/raw_event_ledger.csv
-- data/raw_trial_anchors.csv
-- data/provenance/retrieval_manifest_reduced.csv
-- data/provenance/version_counts.csv
-- data/provenance/download_summary.json
+- src/trialtrace/data/raw_event_ledger.csv
+- src/trialtrace/data/raw_trial_anchors.csv
+- src/trialtrace/data/provenance/retrieval_manifest_reduced.csv
+- src/trialtrace/data/provenance/version_counts.csv
+- src/trialtrace/data/provenance/download_summary.json
 - documentation written for this repository
 
 It does not cover or relicense raw ClinicalTrials.gov records, raw record-history

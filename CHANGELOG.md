@@ -4,6 +4,20 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-09-14
+
+### Security
+
+- Added browser security headers and regression tests for injection-shaped identifiers.
+- Expanded CodeQL analysis to the Python service and browser JavaScript, with workflow actions pinned to immutable upstream release commits.
+- Documented the project's threat boundaries, common vulnerability classes, reporting process, and release security checks.
+
+### Changed
+
+- Added automated package builds, installed-wheel smoke tests, formatting checks, dependency consistency checks, and branch coverage to CI.
+- Bundled the frozen derived corpus in the installation package so a wheel installation can start without a source checkout.
+- Added project usage, API, architecture, testing, security, and release documentation.
+
 ### Fixed
 
 - Preserved the archived CRLF bytes of `version_counts.csv` so its declared SHA-256 remains identical on every Git checkout.
@@ -27,6 +41,7 @@ This project follows [Semantic Versioning](https://semver.org/).
 - Automated API, database, provenance-boundary, and validation tests.
 - Initial public repository structure and automated security checks.
 
-[Unreleased]: https://github.com/ByungwoongYoo/trialtrace/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/ByungwoongYoo/trialtrace/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/ByungwoongYoo/trialtrace/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/ByungwoongYoo/trialtrace/compare/v0.1.0...v0.1.1
-[0.1.0]: https://github.com/ByungwoongYoo/trialtrace/releases/tag/v0.1.0
+[0.1.0]: https://github.com/ByungwoongYoo/trialtrace/tree/v0.1.0

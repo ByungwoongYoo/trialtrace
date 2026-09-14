@@ -13,4 +13,4 @@ This directory contains the frozen, author-created tables used by TrialTrace and
 
 `retrieval_manifest_reduced.csv` retains only the source identifier, version, retrieval time, canonical payload SHA-256, record type, and stable public record-history link. It excludes the raw archive path and undocumented retrieval endpoint from the private analysis manifest.
 
-The author-created derived tables and documentation are licensed under CC BY 4.0 as described in [`LICENSE-DATA`](../LICENSE-DATA). Raw ClinicalTrials.gov records and history payloads are excluded from this repository and from that license grant. See [`THIRD_PARTY_DATA.md`](../THIRD_PARTY_DATA.md).
+The author-created derived tables and documentation are licensed under CC BY 4.0 as described in [`LICENSE-DATA`](../../../LICENSE-DATA). Raw ClinicalTrials.gov records and history payloads are excluded from this repository and from that license grant. See [`THIRD_PARTY_DATA.md`](../../../THIRD_PARTY_DATA.md).

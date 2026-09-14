@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "trialtrace"
-version = "0.1.1"
+version = "0.1.2"
 description = "A source-linked explorer for a frozen, derived ClinicalTrials.gov history corpus"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -25,6 +25,8 @@ test = [
 ]
 dev = [
   "bandit==1.9.4",
+  "build==1.6.1",
+  "coverage==7.16.1",
   "pip-audit==2.10.1",
   "ruff==0.16.7",
 ]
@@ -38,12 +40,20 @@ Archive = "https://doi.org/10.5281/zenodo.22162352"
 where = ["src"]
 
 [tool.setuptools.package-data]
-trialtrace = ["static/*"]
+trialtrace = [
+  "static/*",
+  "data/*",
+  "data/provenance/*",
+]
 
 [tool.pytest.ini_options]
 addopts = "-ra --strict-markers"
 testpaths = ["tests"]
 pythonpath = ["src"]
+filterwarnings = [
+  "error",
+  "ignore:The anyio.abc.BlockingPortal alias is deprecated.*:DeprecationWarning:starlette.testclient",
+]
 
 [tool.coverage.run]
 source = ["trialtrace"]
@@ -54,4 +64,59 @@ target-version = "py311"
 line-length = 120
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "B", "UP"]
+select = ["ALL"]
+ignore = [
+  "COM812", # Ruff's formatter owns trailing commas.
+  "CPY001", # Copyright and licensing are documented in repository-level files.
+  "D203",   # Incompatible with the selected D211 convention.
+  "D213",   # Incompatible with the selected D212 convention.
+]
+
+[tool.ruff.lint.per-file-ignores]
+"scripts/*.py" = [
+  "D103",   # Command entry points and helpers use descriptive names instead of mandatory docstrings.
+  "INP001", # Standalone command-line scripts are intentionally not a package.
+]
+"scripts/build_db.py" = [
+  "T201", # The command-line builder reports its output path to the operator.
+]
+"scripts/check_branch_coverage.py" = [
+  "T201", # The command-line coverage gate reports its measured result to the operator.
+]
+"scripts/smoke_installed_wheel.py" = [
+  "T201", # A successful command-line smoke test reports its result to the operator.
+]
+"src/trialtrace/app.py" = [
+  "ASYNC240", # Startup performs one bounded local path check before serving requests.
+  "C901",     # Route registration keeps the small application factory cohesive.
+  "D103",     # Public callables use signatures and descriptive names instead of mandatory docstrings.
+  "PLR0915",  # Route registration accounts for the application factory's statement count.
+]
+"src/trialtrace/db.py" = [
+  "ANN401", # Validation helpers accept heterogeneous JSON/SQLite values.
+  "D103",   # Public callables use signatures and descriptive names instead of mandatory docstrings.
+  "EM101",  # Local validation errors keep their messages at the raise site.
+  "EM102",  # Local validation errors keep interpolated context at the raise site.
+  "FBT001", # Existing public API accepts a positional hash-verification flag for compatibility.
+  "FBT002", # Existing public API retains its positional boolean default for compatibility.
+  "TRY003", # Validation messages are local, bounded, and not reusable exception classes.
+]
+"tests/*.py" = [
+  "D100",    # Test modules are documented by descriptive test names.
+  "D103",    # Test functions are documented by descriptive test names.
+  "INP001",  # Tests are collected as files rather than imported as a package.
+  "S101",    # Pytest assertions are the test contract.
+]
+"tests/conftest.py" = [
+  "ANN201", # Pytest fixture return types are apparent from the yielded objects.
+  "TC003",  # Path participates in fixture annotations and setup.
+]
+"tests/test_*.py" = [
+  "ANN001",  # Pytest injects fixture parameters dynamically.
+  "PLR2004", # Literal response codes and frozen corpus counts are expected values.
+]
+"tests/test_build.py" = [
+  "FBT003", # One regression test preserves the public positional boolean API.
+  "SIM117", # Nested context managers make the two patched dependencies explicit.
+  "TC003",  # Path participates in test annotations and setup.
+]
