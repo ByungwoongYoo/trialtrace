@@ -26,7 +26,7 @@ test = [
 dev = [
   "bandit==1.8.6",
   "pip-audit==2.9.0",
-  "ruff==0.13.2",
+  "ruff==0.16.7",
 ]
 
 [project.urls]
