@@ -4,6 +4,10 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Preserved the archived CRLF bytes of `version_counts.csv` so its declared SHA-256 remains identical on every Git checkout.
+
 ## [0.1.1] - 2026-09-14
 
 ### Changed

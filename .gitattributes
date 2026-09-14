@@ -1,5 +1,6 @@
 * text=auto eol=lf
 *.csv text eol=lf
+/data/provenance/version_counts.csv -text
 *.json text eol=lf
 *.db binary
 *.png binary
